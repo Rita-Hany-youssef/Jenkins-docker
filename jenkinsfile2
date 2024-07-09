@@ -1,0 +1,32 @@
+pipeline {
+    agent any
+
+    environment {
+        // Specify the full path to your Docker Compose file
+        DOCKER_COMPOSE_FILE = "/home/rita/Desktop/jenwork/task1/docker-compose.yml"
+    }
+
+    stages {
+        stage('Start Mongo Express') {
+            steps {
+                script {
+                    echo "Starting Docker Compose..."
+
+                    // Change directory to where your Docker Compose file is located
+                    dir("/home/rita/Desktop/jenwork/task1") {
+                        // Bring up Docker Compose services
+                        def composeUp = sh(script: "docker-compose up -d", returnStatus: true)
+
+                        // Check if Docker Compose up was successful
+                        if (composeUp == 0) {
+                            echo "Mongo Express started successfully."
+                        } else {
+                            error "Failed to start Mongo Express."
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
